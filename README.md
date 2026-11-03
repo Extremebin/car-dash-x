@@ -38,7 +38,7 @@
 
 ### 2. 安装本 App 并授权
 
-安装 `app-debug.apk`，首次打开授予**通知**和**音频**权限。
+安装 `app-release.apk`，首次打开授予**通知**和**音频**权限。
 
 ### 3. 蓝牙连接车机
 
@@ -67,9 +67,7 @@
 
 项目发布到 GitHub 后，可直接到 **Releases 页面**下载最新版 APK 安装，无需自己打包：
 
-```text
-https://github.com/<你的用户名>/<仓库名>/releases/latest
-```
+https://github.com/Extremebin/car-dash-x/releases/tag/1.0.0
 
 下载 `app-release.apk` 后安装即可（`adb install -r app-release.apk`）。
 

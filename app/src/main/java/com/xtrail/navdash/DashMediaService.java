@@ -260,6 +260,13 @@ public final class DashMediaService extends Service {
         else try { c.startForegroundService(i); } catch (Exception ignored) {}
     }
 
+    /** 触发开机自动扫描（如授予音频权限后重新扫描）。只准备不自动播放。 */
+    public static void autoScan(Context c) {
+        Intent i = new Intent(c, DashMediaService.class).setAction(ACTION_MUSIC).putExtra("ctrl", "autoscan");
+        if (instance != null) instance.onControl(i);
+        else try { c.startForegroundService(i); } catch (Exception ignored) {}
+    }
+
     /** 字段探测：把 metadata 各字段设为不同标记值，用于在仪表盘上确认字段映射。 */
     public static void probe(Context c) {
         Intent i = new Intent(c, DashMediaService.class).setAction(ACTION_PROBE);
@@ -325,6 +332,7 @@ public final class DashMediaService extends Service {
         createChannel();
         buildSession();
         buildPlayer();
+        autoScan();                 // 开机自动扫描本地音乐：让仪表盘立即显示歌曲信息
         ensureReceiverRegistered();
     }
 
@@ -587,7 +595,9 @@ public final class DashMediaService extends Service {
     // ================= 播放控制 =================
     private void onControl(Intent i) {
         String ctrl = i.getStringExtra("ctrl");
-        if ("scan".equals(ctrl)) {
+        if ("autoscan".equals(ctrl)) {
+            autoScan();
+        } else if ("scan".equals(ctrl)) {
             scanPlaylist();
             if (!playlist.isEmpty()) { player.setMediaItems(playlist, 0, 0); player.prepare(); player.play(); }
         } else if ("play".equals(ctrl)) {
@@ -634,6 +644,28 @@ public final class DashMediaService extends Service {
     }
 
     /**
+     * 开机自动扫描：仅当播放列表未设置时执行（避免覆盖已有播放/手动扫描）。
+     * 扫描在后台线程，完成后回主线程设置播放列表并 prepare（不自动播放），让仪表盘立即显示当前歌曲。
+     */
+    private void autoScan() {
+        if (player != null && player.getMediaItemCount() > 0) return;
+        new Thread(() -> {
+            scanPlaylist();
+            new Handler(Looper.getMainLooper()).post(() -> {
+                // 主线程再判断一次：若期间用户已手动扫描/播放（player 已有条目），则不覆盖
+                if (player != null && player.getMediaItemCount() == 0 && !playlist.isEmpty()) {
+                    player.setMediaItems(playlist, 0, 0);
+                    player.prepare();
+                    publish();
+                    Log.i(TAG_AMAP, "[SCAN] 开机自动扫描完成，共 " + playlist.size() + " 首，已准备（未自动播放）");
+                } else {
+                    Log.i(TAG_AMAP, "[SCAN] 开机自动扫描跳过（播放列表已设置或为空，可能未授予音频权限）");
+                }
+            });
+        }, "auto-scan").start();
+    }
+
+    /**
      * 组装仪表盘第二行（专辑区）。三选一（DisplayPrefs.getActiveMode）：
      * 道路名称 / 车道内容 / 当前车速，只输出其中一项；数据缺失时回退 "导航"。
      */
@@ -642,11 +674,9 @@ public final class DashMediaService extends Service {
         if (mode == DisplayPrefs.SHOW_SPEED) {
             return lastSpeed >= 0 ? (lastSpeed + "km/h") : "导航";
         }
-        // 合并模式（默认）：车道信息新鲜(8s) → 显示车道内容；
-        // 否则回落道路名称。8s 未再收到 13012 车道广播即视为已过路口，直接回落。
-        boolean laneFresh = !lastLane.isEmpty()
-                && lastLaneMs > 0 && System.currentTimeMillis() - lastLaneMs <= CarProtocolParser.LANE_FRESH_MS;
-        if (laneFresh) return lastLane;
+        // 合并模式：车道信息显示到被清空为止（过路口/退出导航时 13012 发空车道、或 STALE 15s 清空），
+        // 与手机 HUD 车道时机一致。不再用 8s 新鲜度——8s 会在还没过路口时就过早回落道路名称。
+        if (!lastLane.isEmpty()) return lastLane;
         String road = CarProtocolParser.roadLine2(lastNextRoad, lastCurRoad);
         return road.isEmpty() ? "导航" : road;
     }

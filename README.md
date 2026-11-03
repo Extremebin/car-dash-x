@@ -11,12 +11,12 @@
 
 ## 界面截图
 
-| 首页（导航 HUD + 播放器） | 设置（第二行显示 + 广播日志） |
-| --- | --- |
-| <img src="screenshot/screenshot_1.jpg" width="260"> | <img src="screenshot/screenshot_2.jpg" width="260"> |
+| 车辆仪表盘                                               | 首页（导航 HUD + 播放器）                                    | 设置（第二行显示 + 广播日志）                                    |
+| --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| <img src="screenshot/screenshot_0.jpg" width="260"> | <img src="screenshot/screenshot_1.jpg" width="260"> | <img src="screenshot/screenshot_2.jpg" width="260"> |
 
-| 关于（版本 / 开源 / 免责声明） | 通知栏（本 App + 高德车机版） |
-| --- | --- |
+| 关于（版本 / 开源 / 免责声明）                                  | 通知栏（本 App + 高德车机版）                                  |
+| --------------------------------------------------- | --------------------------------------------------- |
 | <img src="screenshot/screenshot_3.jpg" width="260"> | <img src="screenshot/screenshot_4.jpg" width="260"> |
 
 ---
@@ -86,7 +86,6 @@ cd car-dash-x
 > 签名配置（`storePassword` / `keyAlias` / `keyPassword`）。请**妥善保管 `jks/` 目录**，
 > 切勿提交到仓库或泄露——一旦丢失将无法升级已发布的 App。
 > 若 `keystore.properties` 缺失，`assembleRelease` 会自动跳过签名（仅生成未签名包）。
-
 
 ---
 

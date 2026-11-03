@@ -176,12 +176,13 @@ public final class CarProtocolParser {
         // line1 = baseLine1 + 红绿灯读秒。读秒每秒变化 → 带动仪表盘重绘 line2（修复"line2 不刷新"）
         r.line1 = r.baseLine1;
         if (r.redSec > 0 && !r.baseLine1.isEmpty()) {
-            // 红绿灯相位标志：默认圆圈符号 ●=红灯 ◎=绿灯；开关开启时用文字"红灯/绿灯"
+            // 红绿灯相位标志：默认圆圈符号 ●=红灯 ◎=绿灯；开关开启时用文字"红/绿"。
+            // 精简：灯字删掉、秒字删掉（避免字符串过长导致仪表盘显示不全）。
             String phaseSym;
-            if ("绿".equals(r.lightPhase)) phaseSym = useTextLight ? "绿灯" : "◎";
-            else if ("红".equals(r.lightPhase)) phaseSym = useTextLight ? "红灯" : "●";
+            if ("绿".equals(r.lightPhase)) phaseSym = useTextLight ? "绿" : "◎";
+            else if ("红".equals(r.lightPhase)) phaseSym = useTextLight ? "红" : "●";
             else phaseSym = r.lightPhase;
-            r.line1 = r.baseLine1 + "·" + phaseSym + r.redSec + "秒";
+            r.line1 = r.baseLine1 + "·" + phaseSym + r.redSec;
         }
 
         // line2 = 车道信息（新鲜）时只显示车道；否则进入下一路；无下一路则沿当前路
@@ -299,18 +300,19 @@ public final class CarProtocolParser {
     }
 
     /**
-     * 车道图标码 → 箭头字形。drive_way_lane_Back_icon 为 String，实测 5 张截图映射：
-     * 1→↰、3→↗、15→↑、16→↑、18→↱、31→←、43→↰、0→↑。
-     * "15" 出现 4 次中 3 次为 ↑（仅 1 次为左转机动最右车道的 ↱），故按 ↑ 处理。
+     * 车道图标码 → 箭头字形。只输出车机能显示的字符（与 dirToArrow 同规则：
+     * ← ↑ → ↓ ↖ ↗ ↘ ↙）。实测 ↰/↱ 等 P3 字符车机不显示，故一律映射到 ←/→/↑。
+     * drive_way_lane_Back_icon 为 String，实测映射：
+     * 1→左转/掉头(←)、3→右前方(↗)、15→直行(↑)、16→直行(↑)、18→右转(→)、31→左转(←)、43→左转/掉头(←)、0→直行(↑)。
      */
     private static String laneTypeToArrow(String icon) {
         switch (icon) {
-            case "1": return "↰";   // 左转/掉头（实测 2 次）
-            case "3": return "↗";   // 右前方（实测）
-            case "18": return "↱";  // 右转（实测）
-            case "31": return "←";  // 左转（实测）
-            case "43": return "↰";  // 左转/掉头（实测）
-            case "15":              // 直行（3/4；左转机动最右道为 ↱，可接受）
+            case "1": return "←";   // 左转/掉头
+            case "3": return "↗";   // 右前方
+            case "18": return "→";  // 右转
+            case "31": return "←";  // 左转
+            case "43": return "↓";  // 左转/掉头
+            case "15":              // 直行（3/4；左转机动最右道为 →，可接受）
             case "16":              // 直行（实测）
             case "0":               // 直行（当前车道加粗时仍为 ↑）
             default: return "↑";

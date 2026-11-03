@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -121,6 +122,24 @@ public final class MainActivity extends AppCompatActivity {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // 授予音频读取权限后，重新触发开机自动扫描：
+        // 首次启动时服务已尝试扫描，但可能因权限未授予而得到空列表，这里补扫一次。
+        if (requestCode != 100) return;
+        for (int i = 0; i < permissions.length; i++) {
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) continue;
+            String p = permissions[i];
+            if (Manifest.permission.READ_MEDIA_AUDIO.equals(p)
+                    || Manifest.permission.READ_EXTERNAL_STORAGE.equals(p)) {
+                DashMediaService.autoScan(this);
+                break;
+            }
         }
     }
 }

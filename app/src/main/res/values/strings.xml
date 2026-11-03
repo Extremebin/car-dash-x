@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">仪表盘导航</string>
+
+    <!-- 底部导航 -->
+    <string name="tab_home">首页</string>
+    <string name="tab_settings">设置</string>
+    <string name="tab_about">关于</string>
+
+    <!-- 首页 HUD -->
+    <string name="hud_title">导航 HUD</string>
+    <string name="hud_idle">尚未开始导航</string>
+    <string name="hud_speed_prefix">车速</string>
+    <string name="hud_speed_unknown">--</string>
+    <string name="hud_road_prefix">当前路</string>
+    <string name="hud_road_unknown">--</string>
+
+    <!-- 播放器 -->
+    <string name="player_default_title">仪表盘导航</string>
+    <string name="player_default_artist">等待播放</string>
+    <string name="player_play">播放</string>
+    <string name="player_pause">暂停</string>
+    <string name="player_prev">上一首</string>
+    <string name="player_next">下一首</string>
+    <string name="player_scan">扫描本地音乐</string>
+
+    <!-- 设置页 -->
+    <string name="settings_line2_title">第二行显示内容</string>
+    <string name="settings_show_road_lane">道路名称 + 车道内容（自动）</string>
+    <string name="settings_show_speed">当前车速</string>
+    <string name="settings_line2_hint">控制仪表盘第二行（专辑区）：收到车道信息时显示车道，8秒未更新或已过路口则回落道路名称；或直接显示车速</string>
+    <string name="settings_light_title">红绿灯标志</string>
+    <string name="settings_light_hint">关闭时用圆圈符号：●=红灯 ◎=绿灯；开启后用文字"红灯"/"绿灯"</string>
+    <string name="settings_light_text_mode">用 红灯/绿灯 文字显示</string>
+    <string name="settings_log_title">广播日志</string>
+
+    <!-- 关于页 -->
+    <string name="about_version">版本</string>
+    <string name="about_license_title">开源许可</string>
+    <string name="about_disclaimer_title">免责声明</string>
+    <string name="about_disclaimer_text">本应用为个人开发的仪表盘导航辅助工具，仅供学习交流使用。\n\n导航数据来源于高德车机版广播，应用本身不采集、不上传任何用户数据。\n\n使用本应用产生的任何后果由使用者自行承担，请遵守当地交通法规，安全驾驶。</string>
+    <string name="about_license_text">ExoPlayer / Media3 — Apache License 2.0\nAndroidX AppCompat — Apache License 2.0\nMaterial Components — Apache License 2.0</string>
+</resources>

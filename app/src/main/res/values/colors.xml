@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 深色仪表盘底色 -->
+    <color name="bg_dark">#1a1a1a</color>
+    <color name="bg_surface">#242424</color>
+    <color name="bg_card">#2e2e2e</color>
+
+    <!-- 强调色（导航蓝） -->
+    <color name="accent_blue">#4c9aff</color>
+    <color name="accent_blue_dark">#1e6fd0</color>
+
+    <!-- 语义色 -->
+    <color name="text_primary">#f5f5f5</color>
+    <color name="text_secondary">#b0b0b0</color>
+    <color name="text_dim">#8a8a8a</color>
+    <color name="lane_arrow">#ffcc66</color>
+    <color name="speed_color">#88ccff</color>
+    <color name="red_light">#ff5555</color>
+    <color name="green_light">#66dd77</color>
+    <!-- 启动图标自适应背景（与 icon.png 白底一致） -->
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

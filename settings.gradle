@@ -1,0 +1,26 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        // Aliyun public 镜像对网易云 SDK 的 Gradle Module Metadata/AAR 提供不完整，
+        // 排除该组，让其走下方官方 mavenCentral（repo1.maven.org），避免 "Could not find ...jar"
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+            content { excludeGroupByRegex 'com\\.netease.*' }
+        }
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "CarDashX"
+include ':app'

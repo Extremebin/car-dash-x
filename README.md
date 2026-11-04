@@ -67,7 +67,7 @@
 
 项目发布到 GitHub 后，可直接到 **Releases 页面**下载最新版 APK 安装，无需自己打包：
 
-https://github.com/Extremebin/car-dash-x/releases/tag/1.0.0
+https://github.com/Extremebin/car-dash-x/releases/
 
 下载 `app-release.apk` 后安装即可（`adb install -r app-release.apk`）。
 
